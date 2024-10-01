@@ -1,4 +1,5 @@
 import 'package:aquaventures/screens/home_screen.dart';
+import 'package:aquaventures/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Aquaventure',
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }

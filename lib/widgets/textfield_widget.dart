@@ -31,12 +31,12 @@ class TextFieldWidget extends StatefulWidget {
     this.width = double.infinity,
     this.height = 65,
     this.maxLine = 1,
-    this.hintColor = Colors.black,
+    this.hintColor = Colors.white,
     this.borderColor = Colors.transparent,
     this.showEye = false,
     this.enabled = true,
     this.color = Colors.black,
-    this.radius = 5,
+    this.radius = 15,
     this.hasValidator = true,
     this.textCapitalization = TextCapitalization.sentences,
     this.inputType = TextInputType.text,
@@ -91,32 +91,32 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   borderSide: BorderSide(
                     color: widget.borderColor!,
                   ),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: widget.borderColor!,
                   ),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: widget.borderColor!,
                   ),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
                     color: Colors.red,
                   ),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 errorStyle: const TextStyle(fontFamily: 'QBold', fontSize: 12),
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
                     color: Colors.red,
                   ),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(15),
                 ),
               ),
 

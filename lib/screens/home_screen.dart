@@ -1,3 +1,4 @@
+import 'package:aquaventures/screens/tabs/chat_tab.dart';
 import 'package:aquaventures/screens/tabs/home_tab.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List tabs = [
     const HomeTab(),
-    const SizedBox(),
+    const ChatTab(),
     const SizedBox(),
     const SizedBox(),
     const SizedBox(),
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
           Icon(
-            Icons.shop,
+            Icons.shopping_bag_outlined,
             size: 30,
             color: Colors.white,
           ),

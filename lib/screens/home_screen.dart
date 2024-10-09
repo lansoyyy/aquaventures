@@ -1,3 +1,4 @@
+import 'package:aquaventures/screens/tabs/cart_tab.dart';
 import 'package:aquaventures/screens/tabs/chat_tab.dart';
 import 'package:aquaventures/screens/tabs/home_tab.dart';
 import 'package:aquaventures/utils/colors.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List tabs = [
     const HomeTab(),
     const ChatTab(),
-    const SizedBox(),
+    const CarTab(),
     const SizedBox(),
     const SizedBox(),
   ];

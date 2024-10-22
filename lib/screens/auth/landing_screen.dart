@@ -43,8 +43,8 @@ class LandingScreen extends StatelessWidget {
               textColor: Colors.white,
               label: 'SELLER',
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const LoginScreen()));
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => const LoginScreen()));
               },
             ),
             const SizedBox(

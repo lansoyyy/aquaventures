@@ -30,12 +30,7 @@ class _ChatTabState extends State<ChatTab> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_back,
-                ),
-              ),
+              const SizedBox(),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(

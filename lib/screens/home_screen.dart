@@ -2,6 +2,7 @@ import 'package:aquaventures/screens/tabs/cart_tab.dart';
 import 'package:aquaventures/screens/tabs/chat_tab.dart';
 import 'package:aquaventures/screens/tabs/favorite_tab.dart';
 import 'package:aquaventures/screens/tabs/home_tab.dart';
+import 'package:aquaventures/screens/tabs/profile_tab.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const ChatTab(),
     const CarTab(),
     const FavoriteTab(),
-    const SizedBox(),
+    const ProfileTab(),
   ];
 
   @override

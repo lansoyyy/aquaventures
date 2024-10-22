@@ -38,6 +38,11 @@ dependencies:
   fluttertoast:
   intl:
   curved_navigation_bar:
+  image_picker:
+  firebase_core:
+  cloud_firestore:
+  firebase_storage:
+  firebase_auth:
 
 dev_dependencies:
   flutter_test:

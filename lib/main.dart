@@ -1,8 +1,15 @@
+import 'package:aquaventures/firebase_options.dart';
 import 'package:aquaventures/screens/home_screen.dart';
 import 'package:aquaventures/screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    name: 'aquaventures-a5f3f',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

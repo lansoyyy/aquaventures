@@ -13,6 +13,7 @@ Future addUser(name, email, number) async {
     'id': docUser.id,
     'isVerified': false,
     'favs': [],
+    'carts': [],
     'profile': '',
   };
 

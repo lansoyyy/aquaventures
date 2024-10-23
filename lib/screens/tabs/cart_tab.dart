@@ -1,6 +1,9 @@
 import 'package:aquaventures/utils/colors.dart';
+import 'package:aquaventures/utils/const.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
+import 'package:aquaventures/widgets/toast_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CarTab extends StatefulWidget {
@@ -95,6 +98,7 @@ class _CarTabState extends State<CarTab> {
                       height: 350,
                       width: double.infinity,
                       child: ListView.builder(
+                        itemCount: 0,
                         itemBuilder: (context, index) {
                           return Card(
                             color: primary,
@@ -213,181 +217,249 @@ class _CarTabState extends State<CarTab> {
   }
 
   Widget purchase() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 350,
-          width: double.infinity,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Card(
-                color: primary,
-                child: SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(userId)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: Text('Loading'));
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong'));
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          dynamic mydata = snapshot.data;
+          return Container(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Products')
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return const Center(child: Text('Error'));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.black,
+                      )),
+                    );
+                  }
+
+                  final data = snapshot.requireData;
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 350,
+                        width: double.infinity,
+                        child: ListView.builder(
+                          itemCount: data.docs.length,
+                          itemBuilder: (context, index) {
+                            return mydata['carts'].contains(data.docs[index].id)
+                                ? Card(
+                                    color: primary,
+                                    child: SizedBox(
+                                      height: 200,
+                                      width: double.infinity,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  width: 150,
+                                                  height: 35,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: Colors.white,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      color: Colors.black26),
+                                                  child: Center(
+                                                    child: TextWidget(
+                                                      text: data.docs[index]
+                                                          ['desc'],
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('Users')
+                                                        .doc(userId)
+                                                        .update({
+                                                      'carts': FieldValue
+                                                          .arrayRemove([
+                                                        data.docs[index].id
+                                                      ])
+                                                    });
+                                                    showToast(
+                                                        'Removed from cart');
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.close,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Image.network(
+                                                    data.docs[index]['img'],
+                                                    width: 100,
+                                                    height: 75,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      TextWidget(
+                                                        text: data.docs[index]
+                                                            ['name'],
+                                                        fontSize: 32,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Bold',
+                                                      ),
+                                                      TextWidget(
+                                                        text: '₱0.00',
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Regular',
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Expanded(
+                                                    child: SizedBox(),
+                                                  ),
+                                                  Container(
+                                                    width: 125,
+                                                    height: 35,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Colors.white,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        color: Colors.black26),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.remove,
+                                                          color: Colors.white,
+                                                        ),
+                                                        TextWidget(
+                                                          text: '0',
+                                                          fontSize: 14,
+                                                        ),
+                                                        const Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10, top: 0, bottom: 0),
+                                              child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: ButtonWidget(
+                                                  radius: 100,
+                                                  width: 125,
+                                                  height: 35,
+                                                  fontSize: 14,
+                                                  color: Colors.blue[900]!,
+                                                  label: 'Place Order',
+                                                  onPressed: () {},
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox();
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            TextWidget(
+                              text: 'Total:',
+                              fontSize: 32,
+                              fontFamily: 'Bold',
+                              color: Colors.black,
+                            ),
                             Container(
-                              width: 125,
+                              width: 75,
                               height: 35,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.white,
                                   ),
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.black26),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.blue[900]),
                               child: Center(
                                 child: TextWidget(
-                                  text: 'Too Big',
+                                  text: '₱0.00',
                                   fontSize: 14,
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.close,
-                              ),
-                            ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/images/Web_Photo_Editor 1.png',
-                                width: 100,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                children: [
-                                  TextWidget(
-                                    text: 'Slim',
-                                    fontSize: 32,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
-                                  ),
-                                  TextWidget(
-                                    text: '₱20.00',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Regular',
-                                  ),
-                                ],
-                              ),
-                              const Expanded(
-                                child: SizedBox(),
-                              ),
-                              Container(
-                                width: 125,
-                                height: 35,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                    ),
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.black26),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const Icon(
-                                      Icons.remove,
-                                      color: Colors.white,
-                                    ),
-                                    TextWidget(
-                                      text: 'Too Big',
-                                      fontSize: 14,
-                                    ),
-                                    const Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 10, top: 0, bottom: 10),
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: ButtonWidget(
+                            radius: 20,
+                            width: 150,
+                            height: 50,
+                            fontSize: 18,
+                            color: Colors.blue[900]!,
+                            label: 'ORDER NOW',
+                            onPressed: () {},
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 10, top: 0, bottom: 0),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: ButtonWidget(
-                              radius: 100,
-                              width: 125,
-                              height: 35,
-                              fontSize: 14,
-                              color: Colors.blue[900]!,
-                              label: 'Place Order',
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextWidget(
-                text: 'Total:',
-                fontSize: 32,
-                fontFamily: 'Bold',
-                color: Colors.black,
-              ),
-              Container(
-                width: 75,
-                height: 35,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.blue[900]),
-                child: Center(
-                  child: TextWidget(
-                    text: '₱45.00',
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10, top: 0, bottom: 10),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: ButtonWidget(
-              radius: 20,
-              width: 150,
-              height: 50,
-              fontSize: 18,
-              color: Colors.blue[900]!,
-              label: 'ORDER NOW',
-              onPressed: () {},
-            ),
-          ),
-        ),
-      ],
-    );
+                      ),
+                    ],
+                  );
+                }),
+          );
+        });
   }
 }

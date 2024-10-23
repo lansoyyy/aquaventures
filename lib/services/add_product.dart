@@ -13,6 +13,7 @@ Future addProduct(img, name, desc, note) async {
     'note': note,
     'date': DateTime.now(),
     'uid': userId,
+    'ratings': 0
   };
 
   await docUser.set(json);

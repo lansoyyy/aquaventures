@@ -1,3 +1,4 @@
+import 'package:aquaventures/screens/auth/landing_screen.dart';
 import 'package:flutter/material.dart';
 
 logout(BuildContext context, Widget navigationRoute) {
@@ -24,10 +25,10 @@ logout(BuildContext context, Widget navigationRoute) {
               ),
               MaterialButton(
                 onPressed: () async {
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(
-                  //       builder: (context) => const LoginScreen()),
-                  // );
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => const LandingScreen()),
+                  );
                 },
                 child: const Text(
                   'Continue',

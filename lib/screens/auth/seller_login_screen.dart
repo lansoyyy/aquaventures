@@ -1,6 +1,7 @@
 import 'package:aquaventures/screens/auth/seller_signup_screen.dart';
 import 'package:aquaventures/screens/auth/signup_screen.dart';
 import 'package:aquaventures/screens/home_screen.dart';
+import 'package:aquaventures/screens/seller_home_screen.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
@@ -212,7 +213,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
           email: '${email.text}@seller.com', password: password.text);
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const SellerHomeScreen()),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

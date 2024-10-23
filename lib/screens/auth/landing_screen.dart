@@ -1,4 +1,5 @@
 import 'package:aquaventures/screens/auth/login_screen.dart';
+import 'package:aquaventures/screens/auth/seller_login_screen.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
@@ -43,8 +44,8 @@ class LandingScreen extends StatelessWidget {
               textColor: Colors.white,
               label: 'SELLER',
               onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => const LoginScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const SellerLoginScreen()));
               },
             ),
             const SizedBox(

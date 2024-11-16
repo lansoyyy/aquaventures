@@ -1,3 +1,4 @@
+import 'package:aquaventures/services/add_order.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/utils/const.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
@@ -17,6 +18,12 @@ class _CarTabState extends State<CarTab> {
   int selectedIndex = 0;
 
   final List<String> filters = ['To Purchase', 'Ordered'];
+
+  int qty = 0;
+  int price = 0;
+
+  String id = '';
+  String sellerId = '';
 
   @override
   Widget build(BuildContext context) {
@@ -94,121 +101,183 @@ class _CarTabState extends State<CarTab> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 350,
-                      width: double.infinity,
-                      child: ListView.builder(
-                        itemCount: 0,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            color: primary,
-                            child: SizedBox(
-                              height: 200,
-                              width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: 125,
-                                          height: 35,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.white,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              color: Colors.black26),
-                                          child: Center(
-                                            child: TextWidget(
-                                              text: 'Too Big',
-                                              fontSize: 14,
+                    StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('Orders')
+                            .where('uid', isEqualTo: userId)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return const Center(child: Text('Error'));
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 50),
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: Colors.black,
+                              )),
+                            );
+                          }
+
+                          final data = snapshot.requireData;
+                          return SizedBox(
+                            height: 350,
+                            width: double.infinity,
+                            child: ListView.builder(
+                              itemCount: data.docs.length,
+                              itemBuilder: (context, index) {
+                                return StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('Products')
+                                        .doc(data.docs[index]['productId'])
+                                        .snapshots(),
+                                    builder: (context,
+                                        AsyncSnapshot<DocumentSnapshot>
+                                            snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return const Center(
+                                            child: Text('Loading'));
+                                      } else if (snapshot.hasError) {
+                                        return const Center(
+                                            child:
+                                                Text('Something went wrong'));
+                                      } else if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                      dynamic productData = snapshot.data;
+                                      return Card(
+                                        color: primary,
+                                        child: SizedBox(
+                                          height: 200,
+                                          width: double.infinity,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      width: 125,
+                                                      height: 35,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: Colors.white,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(50),
+                                                          color:
+                                                              Colors.black26),
+                                                      child: Center(
+                                                        child: TextWidget(
+                                                          text: productData[
+                                                              'name'],
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          top: 10),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Image.network(
+                                                            productData['img'],
+                                                            width: 100,
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Column(
+                                                            children: [
+                                                              TextWidget(
+                                                                text:
+                                                                    productData[
+                                                                        'desc'],
+                                                                fontSize: 32,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Bold',
+                                                              ),
+                                                              TextWidget(
+                                                                text: '₱15.00',
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Regular',
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const Expanded(
+                                                            child: SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                          ),
+                                                          // ButtonWidget(
+                                                          //   radius: 100,
+                                                          //   width: 125,
+                                                          //   height: 35,
+                                                          //   fontSize: 14,
+                                                          //   color: Colors.blue[900]!,
+                                                          //   label: 'Completed',
+                                                          //   onPressed: () {},
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      // Row(
+                                                      //   children: [
+                                                      //     for (int i = 0; i < 5; i++)
+                                                      //       Icon(
+                                                      //         Icons.star,
+                                                      //         color: i == 4
+                                                      //             ? Colors.white
+                                                      //             : Colors.amber,
+                                                      //       ),
+                                                      //   ],
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10, top: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/Web_Photo_Editor 1.png',
-                                                width: 100,
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Column(
-                                                children: [
-                                                  TextWidget(
-                                                    text: 'Slim',
-                                                    fontSize: 32,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Bold',
-                                                  ),
-                                                  TextWidget(
-                                                    text: '₱20.00',
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Regular',
-                                                  ),
-                                                ],
-                                              ),
-                                              const Expanded(
-                                                child: SizedBox(
-                                                  width: 10,
-                                                ),
-                                              ),
-                                              ButtonWidget(
-                                                radius: 100,
-                                                width: 125,
-                                                height: 35,
-                                                fontSize: 14,
-                                                color: Colors.blue[900]!,
-                                                label: 'Completed',
-                                                onPressed: () {},
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              for (int i = 0; i < 5; i++)
-                                                Icon(
-                                                  Icons.star,
-                                                  color: i == 4
-                                                      ? Colors.white
-                                                      : Colors.amber,
-                                                ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                      );
+                                    });
+                              },
                             ),
                           );
-                        },
-                      ),
-                    ),
+                        }),
                   ],
                 ),
         ],
@@ -259,100 +328,29 @@ class _CarTabState extends State<CarTab> {
                         height: 350,
                         width: double.infinity,
                         child: ListView.builder(
-                          itemCount: data.docs.length,
+                          itemCount: data.docs.isNotEmpty ? 1 : 0,
                           itemBuilder: (context, index) {
                             return mydata['carts'].contains(data.docs[index].id)
-                                ? Card(
-                                    color: primary,
-                                    child: SizedBox(
-                                      height: 200,
-                                      width: double.infinity,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  width: 150,
-                                                  height: 35,
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: Colors.white,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      color: Colors.black26),
-                                                  child: Center(
-                                                    child: TextWidget(
-                                                      text: data.docs[index]
-                                                          ['desc'],
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  onPressed: () async {
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .collection('Users')
-                                                        .doc(userId)
-                                                        .update({
-                                                      'carts': FieldValue
-                                                          .arrayRemove([
-                                                        data.docs[index].id
-                                                      ])
-                                                    });
-                                                    showToast(
-                                                        'Removed from cart');
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.close,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 10),
-                                              child: Row(
+                                ? Builder(builder: (context) {
+                                    price = data.docs[index]['price'];
+                                    id = data.docs[index].id;
+                                    sellerId = data.docs[index]['uid'];
+                                    return Card(
+                                      color: primary,
+                                      child: SizedBox(
+                                        height: 200,
+                                        width: double.infinity,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Image.network(
-                                                    data.docs[index]['img'],
-                                                    width: 100,
-                                                    height: 75,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      TextWidget(
-                                                        text: data.docs[index]
-                                                            ['name'],
-                                                        fontSize: 32,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Bold',
-                                                      ),
-                                                      TextWidget(
-                                                        text: '₱0.00',
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Regular',
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const Expanded(
-                                                    child: SizedBox(),
-                                                  ),
                                                   Container(
-                                                    width: 125,
+                                                    width: 150,
                                                     height: 35,
                                                     decoration: BoxDecoration(
                                                         border: Border.all(
@@ -362,50 +360,131 @@ class _CarTabState extends State<CarTab> {
                                                             BorderRadius
                                                                 .circular(50),
                                                         color: Colors.black26),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.remove,
-                                                          color: Colors.white,
-                                                        ),
-                                                        TextWidget(
-                                                          text: '0',
-                                                          fontSize: 14,
-                                                        ),
-                                                        const Icon(
-                                                          Icons.add,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ],
+                                                    child: Center(
+                                                      child: TextWidget(
+                                                        text: data.docs[index]
+                                                            ['desc'],
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () async {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection('Users')
+                                                          .doc(userId)
+                                                          .update({
+                                                        'carts': FieldValue
+                                                            .arrayRemove([
+                                                          data.docs[index].id
+                                                        ])
+                                                      });
+                                                      showToast(
+                                                          'Removed from cart');
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.close,
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 10, top: 0, bottom: 0),
-                                              child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: ButtonWidget(
-                                                  radius: 100,
-                                                  width: 125,
-                                                  height: 35,
-                                                  fontSize: 14,
-                                                  color: Colors.blue[900]!,
-                                                  label: 'Place Order',
-                                                  onPressed: () {},
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10, right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Image.network(
+                                                      data.docs[index]['img'],
+                                                      width: 100,
+                                                      height: 75,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        TextWidget(
+                                                          text: data.docs[index]
+                                                              ['name'],
+                                                          fontSize: 32,
+                                                          color: Colors.black,
+                                                          fontFamily: 'Bold',
+                                                        ),
+                                                        TextWidget(
+                                                          text:
+                                                              '₱${data.docs[index]['price']}.00',
+                                                          fontSize: 18,
+                                                          color: Colors.black,
+                                                          fontFamily: 'Regular',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const Expanded(
+                                                      child: SizedBox(),
+                                                    ),
+                                                    Container(
+                                                      width: 125,
+                                                      height: 35,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: Colors.white,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(50),
+                                                          color:
+                                                              Colors.black26),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              if (qty > 0) {
+                                                                setState(() {
+                                                                  qty--;
+                                                                });
+                                                              }
+                                                            },
+                                                            child: const Icon(
+                                                              Icons.remove,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                          TextWidget(
+                                                            text:
+                                                                qty.toString(),
+                                                            fontSize: 14,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                qty++;
+                                                              });
+                                                            },
+                                                            child: const Icon(
+                                                              Icons.add,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
+                                    );
+                                  })
                                 : const SizedBox();
                           },
                         ),
@@ -432,7 +511,7 @@ class _CarTabState extends State<CarTab> {
                                   color: Colors.blue[900]),
                               child: Center(
                                 child: TextWidget(
-                                  text: '₱0.00',
+                                  text: '₱${price * qty}.00',
                                   fontSize: 14,
                                 ),
                               ),
@@ -452,7 +531,17 @@ class _CarTabState extends State<CarTab> {
                             fontSize: 18,
                             color: Colors.blue[900]!,
                             label: 'ORDER NOW',
-                            onPressed: () {},
+                            onPressed: () async {
+                              await FirebaseFirestore.instance
+                                  .collection('Users')
+                                  .doc(userId)
+                                  .update({
+                                'carts': FieldValue.arrayRemove([id])
+                              });
+                              addOrder(mydata['name'], sellerId, id, qty,
+                                  price * qty);
+                              showToast('Order placed succesfully!');
+                            },
                           ),
                         ),
                       ),

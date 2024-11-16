@@ -19,7 +19,7 @@ class _HomeTabState extends State<HomeTab> {
 
   int selectedIndex = 0;
 
-  final List<String> filters = ['All', 'Absolute', 'Nature Spring', 'Aqua'];
+  final List<String> filters = ['All'];
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class _HomeTabState extends State<HomeTab> {
                       children: [
                         Container(
                           height: 50,
-                          width: 300,
+                          width: 375,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
@@ -99,22 +99,22 @@ class _HomeTabState extends State<HomeTab> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: primary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.sort,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        // const SizedBox(
+                        //   width: 20,
+                        // ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: primary,
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: IconButton(
+                        //     onPressed: () {},
+                        //     icon: const Icon(
+                        //       Icons.sort,
+                        //       color: Colors.white,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

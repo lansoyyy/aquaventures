@@ -3,20 +3,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future addProduct(img, name, desc, note) async {
-  final docUser = FirebaseFirestore.instance.collection('Products').doc();
+Future addOrder(name, sellerId, productId, qty, total) async {
+  final docUser = FirebaseFirestore.instance.collection('Orders').doc();
 
   final json = {
-    'img': img,
     'name': name,
-    'desc': desc,
-    'note': note,
+    'sellerId': sellerId,
+    'productId': productId,
     'date': DateTime.now(),
     'uid': userId,
-    'ratings': 0,
-    'favs': [],
     'price': 15,
-    'status': 'Pending',
+    'qty': qty,
+    'total': total
   };
 
   await docUser.set(json);

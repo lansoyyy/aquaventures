@@ -46,13 +46,46 @@ class _ProfileTabState extends State<ProfileTab> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Align(
-                    alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.notifications,
-                      color: primary,
-                    ),
-                  ),
+                  StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Orders')
+                          .where('uid', isEqualTo: userId)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          print(snapshot.error);
+                          return const Center(child: Text('Error'));
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 50),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.black,
+                            )),
+                          );
+                        }
+
+                        final data = snapshot.requireData;
+                        return Align(
+                            alignment: Alignment.topRight,
+                            child: PopupMenuButton(
+                              itemBuilder: (context) {
+                                return [
+                                  for (int i = 0; i < data.docs.length; i++)
+                                    PopupMenuItem(
+                                      child: TextWidget(
+                                        text:
+                                            'Your order: ${data.docs[i].id} is placed',
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                ];
+                              },
+                            ));
+                      }),
                   const SizedBox(
                     height: 20,
                   ),
@@ -69,6 +102,8 @@ class _ProfileTabState extends State<ProfileTab> {
                     width: 350,
                     label: 'Username',
                     controller: username,
+                    color: Colors.black,
+                    hintColor: Colors.black,
                   ),
                   TextFieldWidget(
                     enabled: false,
@@ -76,6 +111,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     width: 350,
                     label: 'Dlivery Address',
                     controller: address,
+                    hintColor: Colors.black,
                   ),
                   TextFieldWidget(
                     enabled: false,
@@ -83,6 +119,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     width: 350,
                     label: 'Email',
                     controller: email,
+                    hintColor: Colors.black,
                   ),
                   TextFieldWidget(
                     borderColor: Colors.grey,
@@ -90,6 +127,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     width: 350,
                     label: 'Password',
                     controller: password,
+                    hintColor: Colors.black,
                     isObscure: true,
                     showEye: true,
                   ),

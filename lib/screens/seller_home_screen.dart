@@ -30,24 +30,25 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
     const SellerHomeTab(),
     const SellerChatTab(),
     const SellerCarTab(),
-    const SellerFavoriteTab(),
     const SellerProfileTab(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const AddProductScreen()));
-        },
-      ),
+      floatingActionButton: _page == 0
+          ? FloatingActionButton(
+              backgroundColor: Colors.blue,
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AddProductScreen()));
+              },
+            )
+          : null,
       backgroundColor: Colors.grey[100],
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
@@ -67,11 +68,6 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
           ),
           Icon(
             Icons.shopping_bag_outlined,
-            size: 30,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.favorite,
             size: 30,
             color: Colors.white,
           ),

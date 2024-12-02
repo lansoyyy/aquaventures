@@ -80,6 +80,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                         text:
                                             'Your order: ${data.docs[i].id} is placed',
                                         fontSize: 14,
+                                        color: Colors.black,
                                       ),
                                     ),
                                 ];

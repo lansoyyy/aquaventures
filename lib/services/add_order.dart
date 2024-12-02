@@ -14,7 +14,8 @@ Future addOrder(name, sellerId, productId, qty, total) async {
     'uid': userId,
     'price': 15,
     'qty': qty,
-    'total': total
+    'total': total,
+    'status': 'Pending'
   };
 
   await docUser.set(json);

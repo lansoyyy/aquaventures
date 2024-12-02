@@ -3,6 +3,7 @@ import 'package:aquaventures/screens/seller_tabs/seller_cart_tab.dart';
 import 'package:aquaventures/screens/seller_tabs/seller_chat_tab.dart';
 import 'package:aquaventures/screens/seller_tabs/seller_favorite_tab.dart';
 import 'package:aquaventures/screens/seller_tabs/seller_home_tab.dart';
+import 'package:aquaventures/screens/seller_tabs/seller_messages_tab.dart';
 import 'package:aquaventures/screens/seller_tabs/seller_profile_tab.dart';
 import 'package:aquaventures/screens/tabs/cart_tab.dart';
 import 'package:aquaventures/screens/tabs/chat_tab.dart';
@@ -28,7 +29,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
 
   List tabs = [
     const SellerHomeTab(),
-    const SellerChatTab(),
+    const SellerMessagesTab(),
     const SellerCarTab(),
     const SellerProfileTab(),
   ];

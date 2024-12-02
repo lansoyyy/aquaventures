@@ -58,13 +58,13 @@ class _HomeTabState extends State<HomeTab> {
                     color: Colors.black,
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           height: 50,
-                          width: 375,
+                          width: 310,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
@@ -118,37 +118,40 @@ class _HomeTabState extends State<HomeTab> {
                       ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: filters.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      String filter = entry.value;
-                      bool isSelected = index == selectedIndex;
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: filters.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        String filter = entry.value;
+                        bool isSelected = index == selectedIndex;
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: ChoiceChip(
-                          showCheckmark: false,
-                          label: Text(
-                            filter,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.grey,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: ChoiceChip(
+                            showCheckmark: false,
+                            label: Text(
+                              filter,
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : Colors.grey,
+                              ),
                             ),
+                            selected: isSelected,
+                            selectedColor: const Color(0xff2A90EF),
+                            backgroundColor: Colors.grey.shade200,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            onSelected: (bool selected) {
+                              setState(() {
+                                selectedIndex = selected ? index : 0;
+                              });
+                            },
                           ),
-                          selected: isSelected,
-                          selectedColor: const Color(0xff2A90EF),
-                          backgroundColor: Colors.grey.shade200,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          onSelected: (bool selected) {
-                            setState(() {
-                              selectedIndex = selected ? index : 0;
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
                   const SizedBox(
                     height: 20,
@@ -214,7 +217,7 @@ class _HomeTabState extends State<HomeTab> {
                                           child: Image.network(
                                             data.docs[index]['img'],
                                             width: 150,
-                                            height: 125,
+                                            height: 105,
                                           ),
                                         ),
                                         const SizedBox(

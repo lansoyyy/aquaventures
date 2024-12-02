@@ -2,6 +2,7 @@ import 'package:aquaventures/screens/tabs/cart_tab.dart';
 import 'package:aquaventures/screens/tabs/chat_tab.dart';
 import 'package:aquaventures/screens/tabs/favorite_tab.dart';
 import 'package:aquaventures/screens/tabs/home_tab.dart';
+import 'package:aquaventures/screens/tabs/messages_tab.dart';
 import 'package:aquaventures/screens/tabs/profile_tab.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List tabs = [
     const HomeTab(),
-    const ChatTab(),
+    const MessagesTab(),
     const CarTab(),
     const FavoriteTab(),
     const ProfileTab(),

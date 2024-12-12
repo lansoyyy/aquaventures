@@ -1,11 +1,7 @@
 import 'dart:async';
 
 import 'package:aquaventures/screens/auth/initial_landing_screen.dart';
-import 'package:aquaventures/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,14 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 250,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Image.asset(
-              'assets/images/AquaVentures.png',
-              height: 50,
+              height: 500,
             ),
           ],
         ),

@@ -1,6 +1,4 @@
 import 'package:aquaventures/screens/auth/seller_signup_screen.dart';
-import 'package:aquaventures/screens/auth/signup_screen.dart';
-import 'package:aquaventures/screens/home_screen.dart';
 import 'package:aquaventures/screens/seller_home_screen.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
@@ -123,20 +121,20 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
               children: [
                 TextFieldWidget(
                   width: 300,
-                  hint: 'Username',
+                  hint: 'Email for Reset Password',
                   textCapitalization: TextCapitalization.none,
                   inputType: TextInputType.emailAddress,
-                  label: 'Username',
+                  label: 'Email for Reset Password',
                   borderColor: secondary,
                   controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an username';
+                      return 'Please enter an email';
                     }
                     final emailRegex =
                         RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
                     if (!emailRegex.hasMatch(value)) {
-                      return 'Please enter a username';
+                      return 'Please enter a email';
                     }
                     return null;
                   },
@@ -161,8 +159,8 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                 if (formKey.currentState!.validate()) {
                   try {
                     Navigator.pop(context);
-                    await FirebaseAuth.instance.sendPasswordResetEmail(
-                        email: '${emailController.text}@seller.com');
+                    await FirebaseAuth.instance
+                        .sendPasswordResetEmail(email: emailController.text);
                     // showToast(
                     //     'Password reset link sent to ${emailController.text}');
                   } catch (e) {
@@ -207,10 +205,10 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
   login(context) async {
     try {
       final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: '${email.text}@seller.com', password: password.text);
+          email: email.text, password: password.text);
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: '${email.text}@seller.com', password: password.text);
+          email: email.text, password: password.text);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const SellerHomeScreen()),

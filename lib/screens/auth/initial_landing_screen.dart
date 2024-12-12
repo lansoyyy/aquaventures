@@ -3,7 +3,6 @@ import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class InitialLandingScreen extends StatelessWidget {
   const InitialLandingScreen({super.key});
@@ -36,8 +35,9 @@ class InitialLandingScreen extends StatelessWidget {
                   children: [
                     TextWidget(
                       text: 'Water That Moves You Forward',
-                      fontSize: 40,
+                      fontSize: 32,
                       fontFamily: 'Bold',
+                      maxLines: 3,
                     ),
                     const SizedBox(
                       height: 25,

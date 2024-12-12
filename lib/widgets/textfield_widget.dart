@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
+import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatefulWidget {
   final String label;
@@ -79,7 +79,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                             widget.isObscure = !widget.isObscure!;
                           });
                         },
-                        icon: widget.isObscure!
+                        icon: !widget.isObscure!
                             ? const Icon(Icons.visibility)
                             : const Icon(Icons.visibility_off))
                     : const SizedBox(),

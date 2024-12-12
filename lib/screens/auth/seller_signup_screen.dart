@@ -1,8 +1,6 @@
 import 'package:aquaventures/screens/auth/login_screen.dart';
 import 'package:aquaventures/screens/auth/seller_login_screen.dart';
-import 'package:aquaventures/screens/home_screen.dart';
 import 'package:aquaventures/services/add_seller.dart';
-import 'package:aquaventures/services/add_user.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
@@ -25,6 +23,7 @@ class _SellerSignupScreenState extends State<SellerSignupScreen> {
   final address = TextEditingController();
   final stationname = TextEditingController();
   final number = TextEditingController();
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +48,7 @@ class _SellerSignupScreenState extends State<SellerSignupScreen> {
               ),
               TextFieldWidget(
                 width: 350,
-                label: 'Username',
+                label: 'Email',
                 controller: email,
               ),
               TextFieldWidget(
@@ -88,8 +87,12 @@ class _SellerSignupScreenState extends State<SellerSignupScreen> {
                         Checkbox(
                           checkColor: primary,
                           activeColor: Colors.white,
-                          value: true,
-                          onChanged: (value) {},
+                          value: isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
                         ),
                         TextWidget(
                           text: 'Remember Me',
@@ -139,35 +142,53 @@ class _SellerSignupScreenState extends State<SellerSignupScreen> {
     );
   }
 
+  bool validatePassword(String password) {
+    // Regular expression explanation:
+    // ^ - start of the string
+    // (?=.*[A-Za-z]) - at least one letter
+    // (?=.*\d) - at least one digit
+    // (?=.*[@$!%*?&]) - at least one special character
+    // .{8,} - minimum 8 characters
+    // $ - end of the string
+    final regex =
+        RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+    return regex.hasMatch(password);
+  }
+
   register(context) async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: '${email.text}@seller.com', password: password.text);
+    if (validatePassword(password.text)) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email.text, password: password.text);
 
-      addSeller(username.text, '${email.text}@seller.com', address.text,
-          number.text, stationname.text);
+        addSeller(username.text, email.text, address.text, number.text,
+            stationname.text);
 
-      // signup(nameController.text, numberController.text, addressController.text,
-      //     emailController.text);
+        // signup(nameController.text, numberController.text, addressController.text,
+        //     emailController.text);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const SellerLoginScreen()),
-      );
-      showToast("Registered Successfully!");
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const SellerLoginScreen()),
+        );
+        showToast("Registered Successfully!");
 
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        showToast('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        showToast('The account already exists for that email.');
-      } else if (e.code == 'invalid-email') {
-        showToast('The email address is not valid.');
-      } else {
-        showToast(e.toString());
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          showToast('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          showToast('The account already exists for that email.');
+        } else if (e.code == 'invalid-email') {
+          showToast('The email address is not valid.');
+        } else {
+          showToast(e.toString());
+        }
+      } on Exception catch (e) {
+        showToast("An error occurred: $e");
       }
-    } on Exception catch (e) {
-      showToast("An error occurred: $e");
+    } else {
+      showToast(
+          'Password should contain atleast one number, letter and symbol and atleast 8 characters');
     }
   }
 }

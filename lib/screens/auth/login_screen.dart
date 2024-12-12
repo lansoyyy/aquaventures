@@ -121,10 +121,10 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 TextFieldWidget(
                   width: 300,
-                  hint: 'Email',
+                  hint: 'Email for Reset Password',
                   textCapitalization: TextCapitalization.none,
                   inputType: TextInputType.emailAddress,
-                  label: 'Email',
+                  label: 'Email for Reset Password',
                   borderColor: secondary,
                   controller: emailController,
                   validator: (value) {

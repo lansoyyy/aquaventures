@@ -1,10 +1,9 @@
 import 'package:aquaventures/screens/auth/landing_screen.dart';
-import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/utils/const.dart';
-import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/logout_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:aquaventures/widgets/textfield_widget.dart';
+import 'package:aquaventures/widgets/toast_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -98,7 +97,6 @@ class _SellerProfileTabState extends State<SellerProfileTab> {
                     height: 20,
                   ),
                   TextFieldWidget(
-                    enabled: false,
                     borderColor: Colors.grey,
                     width: 350,
                     label: 'Username',
@@ -107,10 +105,9 @@ class _SellerProfileTabState extends State<SellerProfileTab> {
                     hintColor: Colors.black,
                   ),
                   TextFieldWidget(
-                    enabled: false,
                     borderColor: Colors.grey,
                     width: 350,
-                    label: 'Dlivery Address',
+                    label: 'Address',
                     controller: address,
                     hintColor: Colors.black,
                   ),
@@ -135,14 +132,35 @@ class _SellerProfileTabState extends State<SellerProfileTab> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ButtonWidget(
-                    width: 300,
-                    textColor: Colors.white,
-                    color: Colors.red,
-                    label: 'Logout',
-                    onPressed: () {
-                      logout(context, const LandingScreen());
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          showToast('Profile updated!');
+                          await FirebaseFirestore.instance
+                              .collection('Seller')
+                              .doc(userId)
+                              .update({
+                            'name': username.text,
+                            'address': address.text,
+                          });
+                        },
+                        child: Image.asset(
+                          'assets/images/Frame 2.png',
+                          width: 175,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          logout(context, const LandingScreen());
+                        },
+                        child: Image.asset(
+                          'assets/images/Frame 3.png',
+                          width: 175,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

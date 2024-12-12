@@ -1,5 +1,4 @@
 import 'package:aquaventures/screens/auth/login_screen.dart';
-import 'package:aquaventures/screens/home_screen.dart';
 import 'package:aquaventures/services/add_user.dart';
 import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/button_widget.dart';
@@ -21,6 +20,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final password = TextEditingController();
   final username = TextEditingController();
   final address = TextEditingController();
+
+  bool isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,8 +74,12 @@ class _SignupScreenState extends State<SignupScreen> {
                         Checkbox(
                           checkColor: primary,
                           activeColor: Colors.white,
-                          value: true,
-                          onChanged: (value) {},
+                          value: isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
                         ),
                         TextWidget(
                           text: 'Remember Me',

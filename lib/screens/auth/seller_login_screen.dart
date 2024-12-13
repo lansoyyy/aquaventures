@@ -36,7 +36,7 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
             ),
             TextFieldWidget(
               width: 350,
-              label: 'Username',
+              label: 'Email',
               controller: email,
             ),
             TextFieldWidget(

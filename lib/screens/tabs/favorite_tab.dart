@@ -69,7 +69,7 @@ class FavoriteTab extends StatelessWidget {
                                     child: Card(
                                       color: Colors.grey[300],
                                       child: SizedBox(
-                                        width: 180,
+                                        width: 160,
                                         height: 265,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),

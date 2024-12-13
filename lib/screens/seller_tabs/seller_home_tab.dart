@@ -1,4 +1,3 @@
-import 'package:aquaventures/utils/colors.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +41,7 @@ class _SellerHomeTabState extends State<SellerHomeTab> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    height: 50,
+                    height: 45,
                     width: 300,
                     decoration: BoxDecoration(
                         color: Colors.white,

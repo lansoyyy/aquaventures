@@ -19,7 +19,7 @@ class _CarTabState extends State<CarTab> {
 
   final List<String> filters = ['To Purchase', 'Ordered'];
 
-  int qty = 0;
+  int qty = 1;
   int price = 0;
 
   String id = '';

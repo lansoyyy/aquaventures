@@ -43,6 +43,7 @@ class AdminusersScreen extends StatelessWidget {
                 text: 'Users',
                 fontSize: 18,
                 fontFamily: 'Bold',
+                color: Colors.black,
               ),
               const SizedBox(
                 height: 10,

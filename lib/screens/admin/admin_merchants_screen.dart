@@ -40,9 +40,10 @@ class AdminMerchantsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextWidget(
-                text: 'Events',
+                text: 'Merchants',
                 fontSize: 18,
                 fontFamily: 'Bold',
+                color: Colors.black,
               ),
               const SizedBox(
                 height: 10,

@@ -1,5 +1,6 @@
 import 'package:aquaventures/screens/admin/admin_home.dart';
 import 'package:aquaventures/screens/admin/admin_merchants_screen.dart';
+import 'package:aquaventures/screens/admin/admin_revenues_screen.dart';
 import 'package:aquaventures/screens/admin/admin_users_screen.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,10 @@ class AdminDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const AdminRevenuesScreen()));
+              },
               title: TextWidget(
                 text: 'Revenues',
                 fontSize: 14,

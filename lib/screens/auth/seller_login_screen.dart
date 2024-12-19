@@ -1,3 +1,4 @@
+import 'package:aquaventures/screens/admin/admin_home.dart';
 import 'package:aquaventures/screens/auth/seller_signup_screen.dart';
 import 'package:aquaventures/screens/seller_home_screen.dart';
 import 'package:aquaventures/utils/colors.dart';
@@ -93,9 +94,69 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
                     builder: (context) => const SellerSignupScreen()));
               },
             ),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  adminDialog();
+                },
+                child: TextWidget(
+                  text: 'Continue as Admin',
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontFamily: 'Bold',
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  final adminusername = TextEditingController();
+  final adminpassword = TextEditingController();
+
+  adminDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFieldWidget(
+                  label: 'Admin Username',
+                  controller: adminusername,
+                ),
+                TextFieldWidget(
+                  label: 'Admin password',
+                  controller: adminpassword,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ButtonWidget(
+                  label: 'Continue',
+                  onPressed: () {
+                    if (adminusername.text == 'admin_username' &&
+                        adminpassword.text == 'admin_password') {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const AdminHome()),
+                      );
+                    } else {
+                      Navigator.pop(context);
+                      showToast('Invalid admin credentials!');
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

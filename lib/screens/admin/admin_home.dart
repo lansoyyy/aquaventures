@@ -45,7 +45,6 @@ class AdminHome extends StatelessWidget {
                   StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('Users')
-                          .where('type', isNotEqualTo: 'Organizer')
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -78,6 +77,7 @@ class AdminHome extends StatelessWidget {
                                   text: data.docs.length.toString(),
                                   fontSize: 50,
                                   fontFamily: 'Bold',
+                                  color: Colors.blue,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +86,7 @@ class AdminHome extends StatelessWidget {
                                     const Icon(
                                       Icons.groups_2_outlined,
                                       size: 25,
-                                      color: Colors.green,
+                                      color: Colors.blue,
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -95,6 +95,7 @@ class AdminHome extends StatelessWidget {
                                       text: 'Users',
                                       fontSize: 18,
                                       fontFamily: 'Bold',
+                                      color: Colors.black,
                                     ),
                                   ],
                                 ),
@@ -139,6 +140,7 @@ class AdminHome extends StatelessWidget {
                                   text: data.docs.length.toString(),
                                   fontSize: 50,
                                   fontFamily: 'Bold',
+                                  color: Colors.blue,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +149,7 @@ class AdminHome extends StatelessWidget {
                                     const Icon(
                                       Icons.event,
                                       size: 25,
-                                      color: Colors.green,
+                                      color: Colors.blue,
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -156,6 +158,7 @@ class AdminHome extends StatelessWidget {
                                       text: 'Event Organizer',
                                       fontSize: 12,
                                       fontFamily: 'Bold',
+                                      color: Colors.black,
                                     ),
                                   ],
                                 ),
@@ -170,16 +173,17 @@ class AdminHome extends StatelessWidget {
                 height: 20,
               ),
               TextWidget(
-                text: 'Posted Events',
+                text: 'Active Merchants',
                 fontSize: 18,
                 fontFamily: 'Bold',
+                color: Colors.black,
               ),
               const SizedBox(
                 height: 10,
               ),
               StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('Events')
+                      .collection('Seller')
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -199,48 +203,71 @@ class AdminHome extends StatelessWidget {
 
                     final data = snapshot.requireData;
                     return Center(
-                      child: DataTable(columns: [
-                        DataColumn(
-                          label: TextWidget(
-                            text: 'ID',
-                            fontSize: 18,
-                          ),
-                        ),
-                        DataColumn(
-                          label: TextWidget(
-                            text: 'Name',
-                            fontSize: 18,
-                          ),
-                        ),
-                        DataColumn(
-                          label: TextWidget(
-                            text: 'Date',
-                            fontSize: 18,
-                          ),
-                        ),
-                      ], rows: [
-                        for (int i = 0; i < data.docs.length; i++)
-                          DataRow(cells: [
-                            DataCell(
-                              TextWidget(
-                                text: data.docs[i].id,
-                                fontSize: 14,
-                              ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(columns: [
+                          DataColumn(
+                            label: TextWidget(
+                              text: 'ID',
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
-                            DataCell(
-                              TextWidget(
-                                text: data.docs[i]['name'],
-                                fontSize: 14,
-                              ),
+                          ),
+                          DataColumn(
+                            label: TextWidget(
+                              text: 'Name',
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
-                            DataCell(
-                              TextWidget(
-                                text: data.docs[i]['date'],
-                                fontSize: 14,
-                              ),
+                          ),
+                          DataColumn(
+                            label: TextWidget(
+                              text: 'Station Name',
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
-                          ])
-                      ]),
+                          ),
+                          DataColumn(
+                            label: TextWidget(
+                              text: 'Station Address',
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ], rows: [
+                          for (int i = 0; i < data.docs.length; i++)
+                            DataRow(cells: [
+                              DataCell(
+                                TextWidget(
+                                  text: '${i + 1}',
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              DataCell(
+                                TextWidget(
+                                  text: data.docs[i]['name'],
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              DataCell(
+                                TextWidget(
+                                  text: data.docs[i]['stationName'],
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              DataCell(
+                                TextWidget(
+                                  text: data.docs[i]['address'],
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ])
+                        ]),
+                      ),
                     );
                   })
             ],

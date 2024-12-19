@@ -5,6 +5,7 @@ import 'package:aquaventures/widgets/button_widget.dart';
 import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:aquaventures/widgets/textfield_widget.dart';
 import 'package:aquaventures/widgets/toast_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -221,12 +222,23 @@ class _LoginScreenState extends State<LoginScreen> {
         final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: email.text, password: password.text);
 
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email.text, password: password.text);
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.user!.uid)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            if (documentSnapshot['isVerified']) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            } else {
+              showToast('Admin has not yet verified your account!');
+            }
+          } else {
+            showToast('Your account has been deleted!');
+          }
+        });
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           showToast("No user found with that email.");

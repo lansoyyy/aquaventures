@@ -265,9 +265,6 @@ class _SellerLoginScreenState extends State<SellerLoginScreen> {
 
   login(context) async {
     try {
-      final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text, password: password.text);
-
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email.text, password: password.text);
 

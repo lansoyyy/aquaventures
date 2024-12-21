@@ -1,7 +1,7 @@
+import 'package:aquaventures/utils/colors.dart';
+import 'package:aquaventures/widgets/text_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:aquaventures/widgets/text_widget.dart';
-import 'package:aquaventures/utils/colors.dart';
 
 class ChatTab extends StatefulWidget {
   final String currentUserId;
@@ -30,7 +30,7 @@ class _ChatTabState extends State<ChatTab> {
         'senderId': widget.currentUserId,
         'receiverId': widget.receiverId,
         'message': message,
-        'timestamp': FieldValue.serverTimestamp(),
+        'timestamp': DateTime.now(),
       });
 
       messageController.clear();
@@ -45,6 +45,7 @@ class _ChatTabState extends State<ChatTab> {
           text: 'MESSAGES',
           fontSize: 18,
           fontFamily: 'Bold',
+          color: Colors.black,
         ),
         centerTitle: true,
       ),

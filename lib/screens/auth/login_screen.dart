@@ -267,60 +267,42 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  bool validatePassword(String password) {
-    // Regular expression explanation:
-    // ^ - start of the string
-    // (?=.*[A-Za-z]) - at least one letter
-    // (?=.*\d) - at least one digit
-    // (?=.*[@$!%*?&]) - at least one special character
-    // .{8,} - minimum 8 characters
-    // $ - end of the string
-    final regex =
-        RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
-    return regex.hasMatch(password);
-  }
-
   login(context) async {
-    if (validatePassword(password.text)) {
-      try {
-        final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email.text, password: password.text);
+    try {
+      final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.text, password: password.text);
 
-        await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(user.user!.uid)
-            .get()
-            .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            if (documentSnapshot['isVerified']) {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            } else {
-              showToast('Admin has not yet verified your account!');
-            }
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.user!.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          if (documentSnapshot['isVerified']) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
           } else {
-            showToast('Your account has been deleted!');
+            showToast('Admin has not yet verified your account!');
           }
-        });
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          showToast("No user found with that email.");
-        } else if (e.code == 'wrong-password') {
-          showToast("Wrong password provided for that user.");
-        } else if (e.code == 'invalid-email') {
-          showToast("Invalid email provided.");
-        } else if (e.code == 'user-disabled') {
-          showToast("User account has been disabled.");
         } else {
-          showToast("An error occurred: ${e.message}");
+          showToast('Your account has been deleted!');
         }
-      } on Exception catch (e) {
-        showToast("An error occurred: $e");
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showToast("No user found with that email.");
+      } else if (e.code == 'wrong-password') {
+        showToast("Wrong password provided for that user.");
+      } else if (e.code == 'invalid-email') {
+        showToast("Invalid email provided.");
+      } else if (e.code == 'user-disabled') {
+        showToast("User account has been disabled.");
+      } else {
+        showToast("An error occurred: ${e.message}");
       }
-    } else {
-      showToast(
-          'Password should contain atleast one number, letter and symbol and atleast 8 characters');
+    } on Exception catch (e) {
+      showToast("An error occurred: $e");
     }
   }
 }
